@@ -1,0 +1,9 @@
+CHIP Inc16 {
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+    Add16(a = in, b[0] = true, out = out);
+    //If we call Add16, then we know our b input will
+    //be a 16 bit bus. we can just set b[0] to be 'true' (1)
+}

@@ -1,0 +1,47 @@
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    Not(in= sel[0], out= notS0);
+    Not(in= sel[1], out= notS1);
+    Not(in= sel[2], out= notS2);
+
+    And(a= notS0, b= notS1, out= nS1nS0);
+    And(a= notS2, b= nS1nS0, out= triplets1);
+    And(a= in, b= triplets1, out= a);
+
+    And(a= sel[0], b= notS1, out= sel0notS1);
+    And(a= sel0notS1, b= notS2, out= sel0notS1notS2);
+    And(a= in, b= sel0notS1notS2, out= b);
+
+    // Logic for output c (sel = 010)
+    And(a= notS0, b= sel[1], out= notS0sel1);
+    And(a= notS0sel1, b= notS2, out= notS0sel1notS2);
+    And(a= in, b= notS0sel1notS2, out= c);
+
+    // Logic for output d (sel = 011)
+    And(a= sel[0], b= sel[1], out= sel0sel1);
+    And(a= sel0sel1, b= notS2, out= sel0sel1notS2);
+    And(a= in, b= sel0sel1notS2, out= d);
+
+    // Logic for output e (sel = 100)
+    And(a= notS0, b= notS1, out= notS0notS1); // Reusing notS0notS1
+    And(a= notS0notS1, b= sel[2], out= notS0notS1sel2);
+    And(a= in, b= notS0notS1sel2, out= e);
+
+    // Logic for output f (sel = 101)
+    And(a= sel[0], b= notS1, out= sel0notS12); // Reusing sel0notS1
+    And(a= sel0notS12, b= sel[2], out= sel0notS1sel2);
+    And(a= in, b= sel0notS1sel2, out= f);
+
+    // Logic for output g (sel = 110)
+    And(a= notS0, b= sel[1], out= notS0sel13); // Reusing notS0sel1
+    And(a= notS0sel13, b= sel[2], out= notS0sel1sel2);
+    And(a= in, b= notS0sel1sel2, out= g);
+
+    // Logic for output h (sel = 111)
+    And(a= sel[0], b= sel[1], out= sel0sel14); // Reusing sel0sel1
+    And(a= sel0sel14, b= sel[2], out= sel0sel1sel2);
+    And(a= in, b= sel0sel1sel2, out= h);   
+}
